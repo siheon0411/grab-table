@@ -1,5 +1,6 @@
 package com.team2.grabtable.domain.store.service;
 
+import com.team2.grabtable.config.OwnerDetails;
 import com.team2.grabtable.domain.store.dto.StoreDto;
 import com.team2.grabtable.domain.store.dto.StoreImageDto;
 import com.team2.grabtable.domain.store.dto.StoreResultDto;
@@ -9,18 +10,18 @@ import java.io.IOException;
 
 public interface StoreService {
 
-    StoreResultDto findStoresByOwnerId(int ownerId);
+    StoreResultDto findStoresByOwnerId(OwnerDetails ownerDetails);
 
-    StoreResultDto getStoreDetail(int storeId);
+    StoreResultDto getStoreDetail(Long storeId);
 
-    StoreImageDto getStoreImage(int storeId);
+    StoreImageDto getStoreImage(Long storeId);
 
-    StoreResultDto insertStore(StoreDto storeDto, MultipartFile imageFile) throws IOException;
+    StoreResultDto insertStore(OwnerDetails ownerDetails, StoreDto storeDto, MultipartFile imageFile) throws IOException;
 
-    StoreResultDto updateStore(StoreDto storeDto);
+    StoreResultDto updateStore(OwnerDetails ownerDetails, StoreDto storeDto);
 
-    StoreResultDto deleteStore(int storeId);
+    StoreResultDto deleteStore(Long storeId);
 
-    StoreResultDto countStoresByOwnerId(int ownerId);
+    StoreResultDto countStoresByOwnerId(Long ownerId);
 
 }
