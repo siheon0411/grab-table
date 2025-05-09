@@ -16,7 +16,7 @@ public class Store {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int storeId;
+    private Long storeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Owner owner;

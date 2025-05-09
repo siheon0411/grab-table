@@ -1,6 +1,6 @@
 package com.team2.grabtable.domain.store.service;
 
-import com.team2.grabtable.domain.owner.dto.OwnerDto;
+import com.team2.grabtable.config.OwnerDetails;
 import com.team2.grabtable.domain.store.dto.StoreDto;
 import com.team2.grabtable.domain.store.dto.StoreImageDto;
 import com.team2.grabtable.domain.store.dto.StoreResultDto;
@@ -23,8 +23,10 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
 
     @Override
-    public StoreResultDto findStoresByOwnerId(int ownerId) {
+    public StoreResultDto findStoresByOwnerId(OwnerDetails ownerDetails) {
         StoreResultDto storeResultDto = new StoreResultDto();
+
+        Long ownerId = ownerDetails.getOwner().getOwnerId();
 
         try {
             List<Store> storeList = storeRepository.findByOwnerId(ownerId);
@@ -34,7 +36,7 @@ public class StoreServiceImpl implements StoreService {
 
                 StoreDto storeDto = StoreDto.builder()
                         .storeId(store.getStoreId())
-                        .ownerId(store.getOwner().getOwnerId())
+                        .ownerId(ownerId)
                         .name(store.getName())
                         .location(store.getLocation())
                         .type(store.getType())
@@ -54,7 +56,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResultDto getStoreDetail(int storeId) {
+    public StoreResultDto getStoreDetail(Long storeId) {
         StoreResultDto storeResultDto = new StoreResultDto();
 
         try {
@@ -86,20 +88,18 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreImageDto getStoreImage(int storeId) {
+    public StoreImageDto getStoreImage(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new EntityNotFoundException("Store not found"));
         return new StoreImageDto(store.getImage());
     }
 
     @Override
-    public StoreResultDto insertStore(StoreDto storeDto, MultipartFile imageFile) throws IOException {
+    public StoreResultDto insertStore(OwnerDetails ownerDetails, StoreDto storeDto, MultipartFile imageFile) throws IOException {
         StoreResultDto storeResultDto = new StoreResultDto();
 
-        // todo: owner 정보 넣기
-
         Store store = Store.builder()
-//                .owner(owner)
+                .owner(ownerDetails.getOwner())
                 .name(storeDto.getName())
                 .location(storeDto.getLocation())
                 .type(storeDto.getType())
@@ -118,14 +118,12 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResultDto updateStore(StoreDto storeDto) {
+    public StoreResultDto updateStore(OwnerDetails ownerDetails, StoreDto storeDto) {
         StoreResultDto storeResultDto = new StoreResultDto();
-
-        // todo: owner 정보 넣기
 
         Store store = Store.builder()
                 .storeId(storeDto.getStoreId())
-//                .owner(owner)
+                .owner(ownerDetails.getOwner())
                 .name(storeDto.getName())
                 .location(storeDto.getLocation())
                 .type(storeDto.getType())
@@ -142,8 +140,10 @@ public class StoreServiceImpl implements StoreService {
         return storeResultDto;
     }
 
+    // todo : 사진 수정
+
     @Override
-    public StoreResultDto deleteStore(int storeId) {
+    public StoreResultDto deleteStore(Long storeId) {
         StoreResultDto storeResultDto = new StoreResultDto();
 
         try {
@@ -158,7 +158,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResultDto countStoresByOwnerId(int ownerId) {
+    public StoreResultDto countStoresByOwnerId(Long ownerId) {
         StoreResultDto storeResultDto = new StoreResultDto();
 
         try {
