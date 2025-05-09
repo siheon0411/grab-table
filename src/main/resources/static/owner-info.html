@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Owner Info</title>
+</head>
+<body>
+<h2>현재 로그인된 사장님 정보</h2>
+<div id="info"></div>
+
+<script>
+    async function fetchOwnerInfo() {
+        try {
+            const response = await fetch("/owner/about", {
+                credentials: "include" // 세션 쿠키 포함
+            });
+
+            if (!response.ok) {
+                throw new Error("로그인이 필요합니다.");
+            }
+
+            const data = await response.json();
+            document.getElementById("info").innerHTML = `
+                    <p><strong>ID:</strong> ${data.ownerId}</p>
+                    <p><strong>Email:</strong> ${data.email}</p>
+                    <p><strong>Name:</strong> ${data.name}</p>
+                    <p><strong>가입일:</strong> ${data.createdAt}</p>
+                `;
+        } catch (e) {
+            document.getElementById("info").innerHTML = `<p style="color:red;">${e.message}</p>`;
+        }
+    }
+
+    window.onload = fetchOwnerInfo;
+</script>
+</body>
+</html>

@@ -3,17 +3,15 @@ package com.team2.grabtable.domain.owner.dto;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OwnerDto {
-    private Long ownerId;
+public class OwnerRegisterDto {
     private String email;
+    private String password;
     private String name;
     private LocalDate birthdate;
-    private LocalDateTime createdAt;
 }

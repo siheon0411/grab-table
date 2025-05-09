@@ -1,25 +1,30 @@
 package com.team2.grabtable.domain.owner.entity;
 
-import com.team2.grabtable.domain.store.entity.Store;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.Date;
-import java.util.List;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Table(name="owner")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Owner {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ownerId;
-
+    private Long ownerId;
     private String email;
     private String password;
     private String name;
-    private Date birthdate;
-    private Date createdAt;
+    private LocalDate birthdate;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "owner")
-    private List<Store> storeList;
 }

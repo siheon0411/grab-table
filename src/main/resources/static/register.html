@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사장님 회원가입</title>
+</head>
+<body>
+<h2>사장님 회원가입</h2>
+
+<form id="register-form">
+    <label>Email: <input type="email" name="email" required></label><br/><br/>
+    <label>Password: <input type="password" name="password" required></label><br/><br/>
+    <label>Name: <input type="text" name="name" required></label><br/><br/>
+    <label>Birthdate: <input type="date" name="birthdate"></label><br/><br/>
+    <button type="submit">가입하기</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+    document.getElementById("register-form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = {
+            email: form.email.value,
+            password: form.password.value,
+            name: form.name.value,
+            birthdate: form.birthdate.value
+        };
+
+        try {
+            const response = await fetch("/owner/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                document.getElementById("result").innerHTML = "<p style='color:green;'>회원가입 성공!</p>";
+            } else {
+                const error = await response.text();
+                document.getElementById("result").innerHTML = `<p style='color:red;'>회원가입 실패: ${error}</p>`;
+            }
+        } catch (e) {
+            document.getElementById("result").innerHTML = `<p style='color:red;'>에러 발생: ${e.message}</p>`;
+        }
+    });
+</script>
+</body>
+</html>
