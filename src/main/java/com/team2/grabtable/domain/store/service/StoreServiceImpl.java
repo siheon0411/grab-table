@@ -143,6 +143,8 @@ public class StoreServiceImpl implements StoreService {
         return storeResultDto;
     }
 
+    // todo : 사진 수정
+
     @Override
     public StoreResultDto deleteStore(Long storeId) {
         StoreResultDto storeResultDto = new StoreResultDto();
