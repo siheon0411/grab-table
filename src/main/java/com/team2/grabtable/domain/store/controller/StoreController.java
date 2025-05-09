@@ -1,7 +1,6 @@
 package com.team2.grabtable.domain.store.controller;
 
 import com.team2.grabtable.config.OwnerDetails;
-import com.team2.grabtable.domain.store.dto.StoreDto;
 import com.team2.grabtable.domain.store.dto.StoreImageDto;
 import com.team2.grabtable.domain.store.dto.StoreRegisterDto;
 import com.team2.grabtable.domain.store.dto.StoreResultDto;
@@ -11,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -35,7 +33,7 @@ public class StoreController {
     @GetMapping("/{storeId}/image")
     public ResponseEntity<byte[]> getStoreImage(@PathVariable Long storeId) {
         StoreImageDto img = storeService.getStoreImage(storeId);
-        return ResponseEntity.status(200).body(img.getData());
+        return ResponseEntity.status(200).contentType(MediaType.parseMediaType(img.getContentType())).body(img.getData());
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

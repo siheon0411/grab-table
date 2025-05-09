@@ -29,4 +29,7 @@ public class Store {
     @Lob
     @Column(name = "image", columnDefinition = "BLOB")
     private byte[] image;
+
+    private String imageContentType;
+
 }

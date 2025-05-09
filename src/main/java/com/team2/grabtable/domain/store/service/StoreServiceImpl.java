@@ -10,7 +10,6 @@ import com.team2.grabtable.domain.store.repository.StoreRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,7 +91,7 @@ public class StoreServiceImpl implements StoreService {
     public StoreImageDto getStoreImage(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new EntityNotFoundException("Store not found"));
-        return new StoreImageDto(store.getImage());
+        return new StoreImageDto(store.getImage(), store.getImageContentType());
     }
 
     @Override
@@ -105,6 +104,7 @@ public class StoreServiceImpl implements StoreService {
                 .location(storeRegisterDto.getLocation())
                 .type(storeRegisterDto.getType())
                 .image(storeRegisterDto.getImageFile().getBytes())
+                .imageContentType(storeRegisterDto.getImageFile().getContentType())
                 .build();
 
         try {
@@ -129,6 +129,7 @@ public class StoreServiceImpl implements StoreService {
                 .location(storeRegisterDto.getLocation())
                 .type(storeRegisterDto.getType())
                 .image(storeRegisterDto.getImageFile().getBytes())
+                .imageContentType(storeRegisterDto.getImageFile().getContentType())
                 .build();
 
         try {

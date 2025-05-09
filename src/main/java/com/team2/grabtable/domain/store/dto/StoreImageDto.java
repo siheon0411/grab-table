@@ -7,4 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class StoreImageDto {
     private byte[] data;
+    private String contentType;
 }
