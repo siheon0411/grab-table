@@ -3,6 +3,7 @@ package com.team2.grabtable.domain.store.service;
 import com.team2.grabtable.config.OwnerDetails;
 import com.team2.grabtable.domain.store.dto.StoreDto;
 import com.team2.grabtable.domain.store.dto.StoreImageDto;
+import com.team2.grabtable.domain.store.dto.StoreRegisterDto;
 import com.team2.grabtable.domain.store.dto.StoreResultDto;
 import com.team2.grabtable.domain.store.entity.Store;
 import com.team2.grabtable.domain.store.repository.StoreRepository;
@@ -95,15 +96,15 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResultDto insertStore(OwnerDetails ownerDetails, StoreDto storeDto, MultipartFile imageFile) throws IOException {
+    public StoreResultDto insertStore(OwnerDetails ownerDetails, StoreRegisterDto storeRegisterDto) throws IOException {
         StoreResultDto storeResultDto = new StoreResultDto();
 
         Store store = Store.builder()
                 .owner(ownerDetails.getOwner())
-                .name(storeDto.getName())
-                .location(storeDto.getLocation())
-                .type(storeDto.getType())
-                .image(imageFile.getBytes())
+                .name(storeRegisterDto.getName())
+                .location(storeRegisterDto.getLocation())
+                .type(storeRegisterDto.getType())
+                .image(storeRegisterDto.getImageFile().getBytes())
                 .build();
 
         try {
@@ -118,15 +119,16 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResultDto updateStore(OwnerDetails ownerDetails, StoreDto storeDto) {
+    public StoreResultDto updateStore(OwnerDetails ownerDetails, Long storeId, StoreRegisterDto storeRegisterDto) throws IOException {
         StoreResultDto storeResultDto = new StoreResultDto();
 
         Store store = Store.builder()
-                .storeId(storeDto.getStoreId())
+                .storeId(storeId)
                 .owner(ownerDetails.getOwner())
-                .name(storeDto.getName())
-                .location(storeDto.getLocation())
-                .type(storeDto.getType())
+                .name(storeRegisterDto.getName())
+                .location(storeRegisterDto.getLocation())
+                .type(storeRegisterDto.getType())
+                .image(storeRegisterDto.getImageFile().getBytes())
                 .build();
 
         try {
@@ -139,8 +141,6 @@ public class StoreServiceImpl implements StoreService {
 
         return storeResultDto;
     }
-
-    // todo : 사진 수정
 
     @Override
     public StoreResultDto deleteStore(Long storeId) {

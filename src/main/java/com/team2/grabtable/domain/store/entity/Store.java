@@ -19,6 +19,7 @@ public class Store {
     private Long storeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
     private Owner owner;
 
     private String name;
