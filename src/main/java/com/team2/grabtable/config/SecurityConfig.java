@@ -44,14 +44,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
-    // 이메일/비밀번호가 맞는지 검증(커스텀 로그인 API에서 직접 인증 처리)
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        builder.userDetailsService(ownerDetailsService) // 사용자를 이메일로 조회하는 UserDetailService 등록
-                .passwordEncoder(passwordEncoder());
-        return builder.build();
-    }
 
 }
