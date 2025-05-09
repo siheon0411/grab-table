@@ -19,13 +19,20 @@
                 throw new Error("로그인이 필요합니다.");
             }
 
-            const data = await response.json();
+            const result = await response.json();
+
+            if (result.result !== "success") {
+                throw new Error("로그인된 사용자 정보가 없습니다.");
+            }
+
+            const owner = result.data;
+
             document.getElementById("info").innerHTML = `
-                    <p><strong>ID:</strong> ${data.ownerId}</p>
-                    <p><strong>Email:</strong> ${data.email}</p>
-                    <p><strong>Name:</strong> ${data.name}</p>
-                    <p><strong>가입일:</strong> ${data.createdAt}</p>
-                `;
+                <p><strong>ID:</strong> ${owner.ownerId}</p>
+                <p><strong>Email:</strong> ${owner.email}</p>
+                <p><strong>Name:</strong> ${owner.name}</p>
+                <p><strong>가입일:</strong> ${owner.createdAt}</p>
+            `;
         } catch (e) {
             document.getElementById("info").innerHTML = `<p style="color:red;">${e.message}</p>`;
         }
@@ -33,5 +40,6 @@
 
     window.onload = fetchOwnerInfo;
 </script>
+
 </body>
 </html>

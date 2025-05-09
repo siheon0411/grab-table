@@ -2,52 +2,70 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>사장님 회원가입</title>
+    <title>회원가입</title>
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-<h2>사장님 회원가입</h2>
 
-<form id="register-form">
-    <label>Email: <input type="email" name="email" required></label><br/><br/>
-    <label>Password: <input type="password" name="password" required></label><br/><br/>
-    <label>Name: <input type="text" name="name" required></label><br/><br/>
-    <label>Birthdate: <input type="date" name="birthdate"></label><br/><br/>
-    <button type="submit">가입하기</button>
-</form>
+<div class="wrapper">
+    <div class="container">
+        <div class="sign-in-container">
+            <form id="registerForm">
+                <h1>Sign Up</h1>
+                <br/>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="text" id="name" name="name" placeholder="Name" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <input type="date" id="birthdate" name="birthdate" required>
+                <button class="form_btn" type="submit">Register</button>
+                <p id="result" style="color:red;"></p>
+            </form>
+        </div>
 
-<div id="result"></div>
+        <div class="overlay-container">
+            <div class="overlay-right">
+                <h1>Grab_Table</h1>
+                <p>이미 계정이 있으신가요?</p>
+                <button class="overlay_btn" onclick="location.href='/login.html'">Sign In</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-    document.getElementById("register-form").addEventListener("submit", async function(event) {
+    document.getElementById('registerForm').addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        const form = event.target;
-        const formData = {
-            email: form.email.value,
-            password: form.password.value,
-            name: form.name.value,
-            birthdate: form.birthdate.value
-        };
+        const email = document.getElementById('email').value;
+        const name = document.getElementById('name').value;
+        const password = document.getElementById('password').value;
+        const birthdate = document.getElementById('birthdate').value;
 
         try {
-            const response = await fetch("/owner/register", {
-                method: "POST",
+            const response = await fetch('/owner/register', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json"
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({ email, name, password, birthdate })
             });
 
+            const result = await response.json();
+            console.log('📝 회원가입 응답:', result);
+
             if (response.ok) {
-                document.getElementById("result").innerHTML = "<p style='color:green;'>회원가입 성공!</p>";
+                alert('회원가입이 완료되었습니다! 로그인해주세요.');
+                location.href = '/auth.html';
             } else {
-                const error = await response.text();
-                document.getElementById("result").innerHTML = `<p style='color:red;'>회원가입 실패: ${error}</p>`;
+                document.getElementById('result').innerText = '회원가입 실패: ' + (result.message || '서버 오류');
             }
-        } catch (e) {
-            document.getElementById("result").innerHTML = `<p style='color:red;'>에러 발생: ${e.message}</p>`;
+
+        } catch (error) {
+            console.error('에러 발생:', error);
+            document.getElementById('result').innerText = '서버 오류 발생';
         }
     });
 </script>
+
 </body>
 </html>
