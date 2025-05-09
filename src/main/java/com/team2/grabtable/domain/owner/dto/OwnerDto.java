@@ -17,4 +17,3 @@ public class OwnerDto {
     private LocalDate birthdate;
     private LocalDateTime createdAt;
 }
-

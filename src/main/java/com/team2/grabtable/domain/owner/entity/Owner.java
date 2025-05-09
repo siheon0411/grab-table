@@ -27,6 +27,4 @@ public class Owner {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-
-
 }
