@@ -22,7 +22,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(MyAuthenticationSuccessHandler successHandler,MyAuthenticationFailureHandler failureHandler,HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/", "/index.html", "/csrf-token", "/login", "/owner/register", "/register.html").permitAll()
+                        .requestMatchers("/", "/index.html", "/csrf-token", "/login", "/owner/register", "/register.html","/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
 //              .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
