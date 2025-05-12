@@ -13,15 +13,15 @@ public interface StoreService {
 
     StoreResultDto findStoresByOwnerId(OwnerDetails ownerDetails);
 
-    StoreResultDto getStoreDetail(Long storeId);
+    StoreResultDto getStoreDetail(OwnerDetails ownerDetails, Long storeId);
 
-    StoreImageDto getStoreImage(Long storeId);
+    StoreImageDto getStoreImage(OwnerDetails ownerDetails, Long storeId);
 
     StoreResultDto insertStore(OwnerDetails ownerDetails, StoreRegisterDto storeRegisterDto) throws IOException;
 
     StoreResultDto updateStore(OwnerDetails ownerDetails, Long storeId, StoreRegisterDto storeRegisterDto) throws IOException;
 
-    StoreResultDto deleteStore(Long storeId);
+    StoreResultDto deleteStore(OwnerDetails ownerDetails, Long storeId);
 
     StoreResultDto countStoresByOwnerId(Long ownerId);
 

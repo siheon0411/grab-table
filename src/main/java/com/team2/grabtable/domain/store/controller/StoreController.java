@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/stores")
+@RequestMapping("/api/admin/stores")
 public class StoreController {
 
     private final StoreService storeService;
@@ -26,13 +26,13 @@ public class StoreController {
     }
 
     @GetMapping("/{storeId}")
-    public ResponseEntity<StoreResultDto> getStoreDetail(@PathVariable("storeId") Long storeId) {
-        return ResponseEntity.status(200).body(storeService.getStoreDetail(storeId));
+    public ResponseEntity<StoreResultDto> getStoreDetail(@AuthenticationPrincipal OwnerDetails ownerDetails, @PathVariable("storeId") Long storeId) {
+        return ResponseEntity.status(200).body(storeService.getStoreDetail(ownerDetails, storeId));
     }
 
     @GetMapping("/{storeId}/image")
-    public ResponseEntity<byte[]> getStoreImage(@PathVariable Long storeId) {
-        StoreImageDto img = storeService.getStoreImage(storeId);
+    public ResponseEntity<byte[]> getStoreImage(@AuthenticationPrincipal OwnerDetails ownerDetails, @PathVariable Long storeId) {
+        StoreImageDto img = storeService.getStoreImage(ownerDetails, storeId);
         return ResponseEntity.status(200).contentType(MediaType.parseMediaType(img.getContentType())).body(img.getData());
     }
 
@@ -47,7 +47,7 @@ public class StoreController {
     }
 
     @DeleteMapping("/{storeId}")
-    public ResponseEntity<StoreResultDto> deleteStore(@PathVariable("storeId") Long storeId) {
-        return ResponseEntity.status(200).body(storeService.deleteStore(storeId));
+    public ResponseEntity<StoreResultDto> deleteStore(@AuthenticationPrincipal OwnerDetails ownerDetails, @PathVariable("storeId") Long storeId) {
+        return ResponseEntity.status(200).body(storeService.deleteStore(ownerDetails, storeId));
     }
 }
