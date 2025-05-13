@@ -10,7 +10,6 @@ import com.team2.grabtable.domain.store.repository.StoreRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,25 +56,28 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResultDto getStoreDetail(Long storeId) {
+    public StoreResultDto getStoreDetail(OwnerDetails ownerDetails, Long storeId) {
         StoreResultDto storeResultDto = new StoreResultDto();
 
         try {
-            Optional<Store> storeList = storeRepository.findById(storeId);
+            Optional<Store> optionalStore = storeRepository.findById(storeId);
 
-            if (storeList.isPresent()) {
-                Store store = storeList.get();
+            if (optionalStore.isPresent()) {
+                Store store = optionalStore.get();
+                if (store.getOwner().getOwnerId().equals(ownerDetails.getOwner().getOwnerId())) {
+                    StoreDto storeDto = StoreDto.builder()
+                            .storeId(store.getStoreId())
+                            .ownerId(store.getOwner().getOwnerId())
+                            .name(store.getName())
+                            .location(store.getLocation())
+                            .type(store.getType())
+                            .build();
 
-                StoreDto storeDto = StoreDto.builder()
-                        .storeId(store.getStoreId())
-                        .ownerId(store.getOwner().getOwnerId())
-                        .name(store.getName())
-                        .location(store.getLocation())
-                        .type(store.getType())
-                        .build();
-
-                storeResultDto.setStoreDto(storeDto);
-                storeResultDto.setResult("success");
+                    storeResultDto.setStoreDto(storeDto);
+                    storeResultDto.setResult("success");
+                } else {
+                    storeResultDto.setResult("no permission at " + storeId + " store");
+                }
             } else {
                 storeResultDto.setResult("notfound");
             }
@@ -89,10 +91,10 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreImageDto getStoreImage(Long storeId) {
+    public StoreImageDto getStoreImage(OwnerDetails ownerDetails, Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new EntityNotFoundException("Store not found"));
-        return new StoreImageDto(store.getImage());
+        return new StoreImageDto(store.getImage(), store.getImageContentType());
     }
 
     @Override
@@ -105,6 +107,7 @@ public class StoreServiceImpl implements StoreService {
                 .location(storeRegisterDto.getLocation())
                 .type(storeRegisterDto.getType())
                 .image(storeRegisterDto.getImageFile().getBytes())
+                .imageContentType(storeRegisterDto.getImageFile().getContentType())
                 .build();
 
         try {
@@ -122,18 +125,32 @@ public class StoreServiceImpl implements StoreService {
     public StoreResultDto updateStore(OwnerDetails ownerDetails, Long storeId, StoreRegisterDto storeRegisterDto) throws IOException {
         StoreResultDto storeResultDto = new StoreResultDto();
 
-        Store store = Store.builder()
+        Store updateStore = Store.builder()
                 .storeId(storeId)
                 .owner(ownerDetails.getOwner())
                 .name(storeRegisterDto.getName())
                 .location(storeRegisterDto.getLocation())
                 .type(storeRegisterDto.getType())
                 .image(storeRegisterDto.getImageFile().getBytes())
+                .imageContentType(storeRegisterDto.getImageFile().getContentType())
                 .build();
 
         try {
-            storeRepository.save(store);
-            storeResultDto.setResult("success");
+
+            Optional<Store> store = storeRepository.findById(storeId);
+
+            if (store.isPresent()) {
+                Store storeToDelete = store.get();
+                if (storeToDelete.getOwner().getOwnerId().equals(ownerDetails.getOwner().getOwnerId())) {
+                    storeRepository.save(updateStore);
+                    storeResultDto.setResult("success");
+                } else {
+                    storeResultDto.setResult("no permission at " + storeId + "store");
+                }
+            } else {
+                storeResultDto.setResult("notfound");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             storeResultDto.setResult("fail");
@@ -143,12 +160,25 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResultDto deleteStore(Long storeId) {
+    public StoreResultDto deleteStore(OwnerDetails ownerDetails, Long storeId) {
         StoreResultDto storeResultDto = new StoreResultDto();
 
         try {
-            storeRepository.deleteById(storeId);
-            storeResultDto.setResult("success");
+
+            Optional<Store> store = storeRepository.findById(storeId);
+
+            if (store.isPresent()) {
+                Store storeToDelete = store.get();
+                if (storeToDelete.getOwner().getOwnerId().equals(ownerDetails.getOwner().getOwnerId())) {
+                    storeRepository.deleteById(storeId);
+                    storeResultDto.setResult("success");
+                } else {
+                    storeResultDto.setResult("no permission at " + storeId + "store");
+                }
+            } else {
+                storeResultDto.setResult("notfound");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             storeResultDto.setResult("fail");
