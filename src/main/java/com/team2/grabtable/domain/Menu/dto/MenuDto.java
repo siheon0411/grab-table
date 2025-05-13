@@ -10,4 +10,7 @@ public class MenuDto {
     private Long storeId;
     private String name;
     private int price;
+
+    private byte[] image;
+    private String imageContentType;
 }

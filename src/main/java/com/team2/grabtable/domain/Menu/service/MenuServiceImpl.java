@@ -30,11 +30,11 @@ public class MenuServiceImpl implements MenuService {
 
         try {
 
-            Optional<Store> store = storeRepository.findById(storeId);
+            Optional<Store> optionalStore = storeRepository.findById(storeId);
 
-            if (store.isPresent()) {
-                Store storeToDelete = store.get();
-                if (storeToDelete.getOwner().getOwnerId().equals(ownerDetails.getOwner().getOwnerId())) {
+            if (optionalStore.isPresent()) {
+                Store store = optionalStore.get();
+                if (store.getOwner().getOwnerId().equals(ownerDetails.getOwner().getOwnerId())) {
                     List<Menu> menuList = menuRepository.findByStoreId(storeId);
                     List<MenuDto> menuDtoList = new ArrayList<>();
 
@@ -44,6 +44,8 @@ public class MenuServiceImpl implements MenuService {
                                 .storeId(menu.getStore().getStoreId())
                                 .name(menu.getName())
                                 .price(menu.getPrice())
+                                .image(menu.getImage())
+                                .imageContentType(menu.getImageContentType())
                                 .build();
                         menuDtoList.add(menuDto);
                     }
@@ -82,6 +84,8 @@ public class MenuServiceImpl implements MenuService {
                             .storeId(menu.getStore().getStoreId())
                             .name(menu.getName())
                             .price(menu.getPrice())
+                            .image(menu.getImage())
+                            .imageContentType(menu.getImageContentType())
                             .build();
                     menuResultDto.setMenuDto(menuDto);
                     menuResultDto.setResult("success");
