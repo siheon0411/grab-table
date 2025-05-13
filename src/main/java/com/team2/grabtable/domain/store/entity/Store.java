@@ -16,9 +16,10 @@ public class Store {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int storeId;
+    private Long storeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
     private Owner owner;
 
     private String name;
@@ -28,4 +29,7 @@ public class Store {
     @Lob
     @Column(name = "image", columnDefinition = "BLOB")
     private byte[] image;
+
+    private String imageContentType;
+
 }

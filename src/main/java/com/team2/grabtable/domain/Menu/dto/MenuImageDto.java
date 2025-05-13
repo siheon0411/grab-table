@@ -1,11 +1,11 @@
-package com.team2.grabtable.domain.store.dto;
+package com.team2.grabtable.domain.Menu.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class StoreImageDto {
+public class MenuImageDto {
     private byte[] data;
     private String contentType;
 }
