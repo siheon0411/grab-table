@@ -1,15 +1,15 @@
 package com.team2.grabtable.domain.store.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
-@Data
 @Builder
-public class StoreDto {
-  
-    private Long storeId;
+@Getter
+public class StoreRegisterDto {
     private Long ownerId;
     private String name;
     private String location;
     private String type;
+    private MultipartFile imageFile;
 }
