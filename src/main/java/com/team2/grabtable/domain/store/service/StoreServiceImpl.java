@@ -40,6 +40,8 @@ public class StoreServiceImpl implements StoreService {
                         .name(store.getName())
                         .location(store.getLocation())
                         .type(store.getType())
+                        .image(store.getImage())
+                        .imageContentType(store.getImageContentType())
                         .build();
                 storeDtoList.add(storeDto);
             }
@@ -71,6 +73,8 @@ public class StoreServiceImpl implements StoreService {
                             .name(store.getName())
                             .location(store.getLocation())
                             .type(store.getType())
+                            .image(store.getImage())
+                            .imageContentType(store.getImageContentType())
                             .build();
 
                     storeResultDto.setStoreDto(storeDto);
