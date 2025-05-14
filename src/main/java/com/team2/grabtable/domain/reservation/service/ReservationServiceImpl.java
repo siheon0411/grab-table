@@ -75,6 +75,53 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public ReservationResultDto changeStatus(Long ownerId, Long storeId, Long reservationId) {
+        ReservationResultDto reservationResultDto = new ReservationResultDto();
+        Optional<Owner> owner = ownerRepository.findById(ownerId);
+
+        try {
+            if (owner.isEmpty()) {
+                reservationResultDto.setResult("Owner not found");
+                return reservationResultDto;
+            }
+
+            Store store = storeRepository.findById(storeId)
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 매장입니다."));
+
+            if (!store.getOwner().getOwnerId().equals(ownerId)) {
+                throw new RuntimeException("당신의 매장이 아니어유.");
+            }
+
+            Reservation reservation = reservationRepository.findWithStoreByReservationId(reservationId)
+                    .orElseThrow(() -> new RuntimeException("존재하지 않는 예약입니다."));
+
+            if (!reservation.getStore().getStoreId().equals(storeId)) {
+                throw new RuntimeException("예약이 해당 매장에 속하지 않습니다.");
+            }
+
+            if (!reservation.getStore().getOwner().getOwnerId().equals(ownerId)) {
+                throw new AccessDeniedException("예약 접근 권한 없음! 당신네 가게 예약이 아니어유.");
+            }
+
+            // status 변경 "before" <-> "after"
+            if (reservation.getStatus().equals("before")) {
+                reservation.setStatus("after");     // before면 after로 변경
+            } else {
+                reservation.setStatus("before");    // after면 before로 변경
+            }
+
+            reservationRepository.save(reservation);
+            reservationResultDto.setResult("success");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            reservationResultDto.setResult("fail");
+        }
+
+        return reservationResultDto;
+    }
+
+    @Override
     public ReservationResultDto deleteReservation(Long ownerId, Long reservationId) {
         ReservationResultDto reservationResultDto = new ReservationResultDto();
 

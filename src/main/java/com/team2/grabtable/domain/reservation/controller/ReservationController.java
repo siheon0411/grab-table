@@ -28,6 +28,19 @@ public class ReservationController {
         return ResponseEntity.ok(reservationResultDto);
     }
 
+    @PatchMapping("/{reservationId}")
+    public ResponseEntity<ReservationResultDto> changeStatus(
+            @AuthenticationPrincipal OwnerDetails ownerDetails,
+            @PathVariable Long storeId,
+            @PathVariable Long reservationId
+    ) {
+        Long ownerId = ownerDetails.getOwner().getOwnerId();
+
+        ReservationResultDto reservationResultDto = reservationService.changeStatus(ownerId, storeId, reservationId);
+
+        return ResponseEntity.ok(reservationResultDto);
+    }
+
 
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<ReservationResultDto> deleteReservation(
