@@ -54,7 +54,7 @@
       const result = await response.json();
 
       if (response.ok && result.result === 'success') {
-        location.href = '/owner-info.html';
+        location.href = '/dashboard.html';
       } else {
         document.getElementById('result').innerText = '로그인 실패. 이메일 또는 비밀번호를 확인하세요.';
       }

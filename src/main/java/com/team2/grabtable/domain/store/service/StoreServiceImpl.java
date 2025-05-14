@@ -1,6 +1,8 @@
 package com.team2.grabtable.domain.store.service;
 
 import com.team2.grabtable.config.OwnerDetails;
+import com.team2.grabtable.domain.Menu.repository.MenuRepository;
+import com.team2.grabtable.domain.review.repository.ReviewRepository;
 import com.team2.grabtable.domain.store.dto.StoreDto;
 import com.team2.grabtable.domain.store.dto.StoreImageDto;
 import com.team2.grabtable.domain.store.dto.StoreRegisterDto;
@@ -21,6 +23,8 @@ import java.util.Optional;
 public class StoreServiceImpl implements StoreService {
 
     private final StoreRepository storeRepository;
+    private final MenuRepository menuRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public StoreResultDto findStoresByOwnerId(OwnerDetails ownerDetails) {
@@ -174,6 +178,8 @@ public class StoreServiceImpl implements StoreService {
             if (store.isPresent()) {
                 Store storeToDelete = store.get();
                 if (storeToDelete.getOwner().getOwnerId().equals(ownerDetails.getOwner().getOwnerId())) {
+                    menuRepository.deleteAll(menuRepository.findByStoreId(storeId));
+                    reviewRepository.deleteAll(reviewRepository.findByStoreId(storeId));
                     storeRepository.deleteById(storeId);
                     storeResultDto.setResult("success");
                 } else {
