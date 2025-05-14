@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 
-    @Query("select m from Menu m where m.store.storeId = :storeId")
+    @Query("select m from Menu m join fetch m.store where m.store.storeId = :storeId")
     List<Menu> findByStoreId(@Param("storeId") Long storeId);
 
 }

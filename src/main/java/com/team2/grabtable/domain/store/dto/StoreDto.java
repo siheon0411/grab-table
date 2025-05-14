@@ -11,4 +11,7 @@ public class StoreDto {
     private String name;
     private String location;
     private String type;
+
+    private byte[] image;
+    private String imageContentType;
 }
