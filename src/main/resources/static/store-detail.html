@@ -4,20 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>가게 상세보기 | CatchTable</title>
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
+<!-- CSRF Token Hidden -->
+<input type="hidden" id="_csrf" name="_csrf" value="">
+
 <!-- 네비게이션 바 -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="#">CatchTable</a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="/dashboard.html">대시보드</a></li>
-                <li class="nav-item"><a class="nav-link" href="/store-register.html">가게 등록</a></li>
+                <li class="nav-item"><a class="nav-link" href="/dashboard">대시보드</a></li>
+                <li class="nav-item"><a class="nav-link" href="/store-register">가게 등록</a></li>
                 <li class="nav-item"><a class="nav-link" href="/logout">로그아웃</a></li>
             </ul>
         </div>
@@ -25,101 +25,96 @@
 </nav>
 
 <div class="container mt-5">
-    <!-- 가게명 & 삭제 버튼 -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 id="storeName">가게명 로딩중...</h3>
         <button id="deleteStoreBtn" class="btn btn-danger">가게 삭제하기</button>
     </div>
 
-    <!-- 탭 네비게이션 -->
     <ul class="nav nav-tabs mb-3" id="storeTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button
-                    class="nav-link active"
-                    id="menu-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#menuTab"
-                    type="button"
-                    role="tab"
-                    aria-controls="menuTab"
-                    aria-selected="true"
-            >메뉴</button>
+            <button class="nav-link active" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menuTab" type="button" role="tab">메뉴</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button
-                    class="nav-link"
-                    id="review-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#reviewTab"
-                    type="button"
-                    role="tab"
-                    aria-controls="reviewTab"
-                    aria-selected="false"
-            >리뷰</button>
+            <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#reviewTab" type="button" role="tab">리뷰</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="reservation-tab" data-bs-toggle="tab" data-bs-target="#reservationTab" type="button" role="tab">예약</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="slot-tab" data-bs-toggle="tab" data-bs-target="#slotTab" type="button" role="tab">시간대 관리</button>
         </li>
     </ul>
 
-    <!-- 탭 콘텐츠 -->
     <div class="tab-content" id="storeTabContent">
-        <!-- 메뉴 탭 -->
-        <div
-                class="tab-pane fade show active"
-                id="menuTab"
-                role="tabpanel"
-                aria-labelledby="menu-tab"
-        >
+        <div class="tab-pane fade show active" id="menuTab" role="tabpanel">
             <div class="mb-3 d-flex justify-content-between align-items-center">
                 <h5>메뉴 목록</h5>
-                <button
-                        class="btn btn-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#menuModal"
-                        data-action="create"
-                >메뉴 추가</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#menuModal" data-action="create">메뉴 추가</button>
             </div>
             <table class="table table-hover">
                 <thead>
-                <tr>
-                    <th>메뉴명</th>
-                    <th>가격 (원)</th>
-                    <th>이미지</th>
-                    <th>작업</th>
-                </tr>
+                <tr><th>메뉴명</th><th>가격 (원)</th><th>이미지</th><th>작업</th></tr>
                 </thead>
                 <tbody id="menuTableBody"></tbody>
             </table>
         </div>
 
-        <!-- 리뷰 탭 -->
-        <div
-                class="tab-pane fade"
-                id="reviewTab"
-                role="tabpanel"
-                aria-labelledby="review-tab"
-        >
+        <div class="tab-pane fade" id="reviewTab" role="tabpanel">
             <h5 class="mt-3">리뷰 목록</h5>
             <table class="table table-hover">
                 <thead>
-                <tr>
-                    <th>작성자(ID)</th>
-                    <th>메뉴명</th>
-                    <th>내용</th>
-                    <th>이미지</th>
-                    <th>작성일</th>
-                    <th>수정일</th>
-                </tr>
+                <tr><th>작성자(ID)</th><th>메뉴명</th><th>내용</th><th>이미지</th><th>작성일</th><th>수정일</th></tr>
                 </thead>
                 <tbody id="reviewTableBody"></tbody>
             </table>
-            <nav>
-                <ul class="pagination justify-content-center" id="reviewPagination"></ul>
-            </nav>
+            <nav><ul class="pagination justify-content-center" id="reviewPagination"></ul></nav>
         </div>
+
+        <!-- 예약 탭 -->
+        <div class="tab-pane fade" id="reservationTab" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5>예약 목록</h5>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>예약ID</th>
+                    <th>방문일</th>
+                    <th>시간대</th>
+                    <th>생성일</th>
+                    <th>상태</th>
+                    <th>작업</th>
+                </tr>
+                </thead>
+                <tbody id="reservationTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- 시간대 관리 탭 -->
+        <div class="tab-pane fade" id="slotTab" role="tabpanel">
+            <div class="mb-3 d-flex justify-content-between align-items-center">
+                <h5>예약 시간대 설정</h5>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#slotModal">시간대 추가</button>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>슬롯ID</th>
+                    <th>시작시간</th>
+                    <th>종료시간</th>
+                    <th>허용 멤버십</th>
+                    <th>작업</th>
+                </tr>
+                </thead>
+                <tbody id="slotTableBody"></tbody>
+            </table>
+        </div>
+
     </div>
 </div>
 
 <!-- 메뉴 추가/수정 Modal -->
-<div class="modal fade" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+<div class="modal fade" id="menuModal" tabindex="-1">
     <div class="modal-dialog">
         <form id="menuForm" enctype="multipart/form-data" class="modal-content">
             <div class="modal-header">
@@ -152,7 +147,43 @@
     </div>
 </div>
 
+<!-- 슬롯 추가 Modal -->
+<div class="modal fade" id="slotModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="slotForm" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">시간대 추가</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="storeId" id="slotStoreId">
+                <div class="mb-3">
+                    <label for="slotStart" class="form-label">시작시간</label>
+                    <input type="time" class="form-control" id="slotStart" name="startTime" required>
+                </div>
+                <div class="mb-3">
+                    <label for="slotEnd" class="form-label">종료시간</label>
+                    <input type="time" class="form-control" id="slotEnd" name="endTime" required>
+                </div>
+                <div class="mb-3">
+                    <label for="slotMembership" class="form-label">허용 멤버십</label>
+                    <select class="form-select" id="slotMembership" name="allowedMembership">
+                        <option value="GOLD">GOLD</option>
+                        <option value="SILVER">SILVER</option>
+                        <option value="BRONZE">BRONZE</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="submit" class="btn btn-primary">저장</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
     const params = new URLSearchParams(location.search);
     const storeId = params.get("storeId");
@@ -162,19 +193,22 @@
         loadStore();
         loadMenus();
         loadReviews(0);
+        loadReservations();
+        loadSlots();
+
         document.getElementById("deleteStoreBtn").addEventListener("click", deleteStore);
         document.getElementById("menuModal").addEventListener("show.bs.modal", onMenuModalShow);
         document.getElementById("menuForm").addEventListener("submit", saveMenu);
+
+        document.getElementById("slotForm").addEventListener("submit", saveSlot);
+        document.getElementById('slotStoreId').value = storeId;
     });
 
-    function loadStore() {
-        fetch(`/api/admin/stores`)
-            .then(res => res.json())
-            .then(data => {
-                const store = data.storeDtoList.find(s => s.storeId == storeId);
-                document.getElementById("storeName").textContent =
-                    store ? store.name : "가게 정보 없음";
-            });
+    async function loadStore() {
+        const res = await fetch(`/api/admin/stores`);
+        const data = await res.json();
+        const store = data.storeDtoList.find(s => s.storeId == storeId);
+        document.getElementById("storeName").textContent = store ? store.name : "가게 정보 없음";
     }
 
     function loadMenus() {
@@ -186,18 +220,13 @@
                 (data.menuDtoList || []).forEach(menu => {
                     const tr = document.createElement("tr");
                     tr.innerHTML = `
-              <td>${menu.name}</td>
-              <td>${menu.price.toLocaleString()}</td>
-              <td><img
-                    src="data:${menu.imageContentType};base64,${menu.image}"
-                    style="width:60px;height:60px;object-fit:cover;"
-                  /></td>
-              <td>
-                <button class="btn btn-sm btn-outline-secondary me-2"
-                  data-action="edit" data-id="${menu.menuId}">수정</button>
-                <button class="btn btn-sm btn-outline-danger"
-                  data-action="delete" data-id="${menu.menuId}">삭제</button>
-              </td>`;
+            <td>${menu.name}</td>
+            <td>${menu.price.toLocaleString()}</td>
+            <td><img src="data:${menu.imageContentType};base64,${menu.image}" style="width:60px;height:60px;object-fit:cover;" /></td>
+            <td>
+              <button class="btn btn-sm btn-outline-secondary me-2" data-action="edit" data-id="${menu.menuId}">수정</button>
+              <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${menu.menuId}">삭제</button>
+            </td>`;
                     tbody.appendChild(tr);
                 });
                 tbody.querySelectorAll("button").forEach(btn => {
@@ -210,16 +239,11 @@
     }
 
     function loadReviews(pageNumber) {
-        // 1) 전체 리뷰 수 조회
         fetch(`/api/admin/stores/${storeId}/reviews/count`)
             .then(res => res.json())
             .then(cntData => {
                 const totalCount = cntData.count || 0;
-                // 2) 페이징된 리뷰 조회
-                return fetch(
-                    `/api/admin/stores/${storeId}/reviews`
-                    + `?pageNumber=${pageNumber}&pageSize=${reviewPageSize}`
-                )
+                return fetch(`/api/admin/stores/${storeId}/reviews?pageNumber=${pageNumber}&pageSize=${reviewPageSize}`)
                     .then(res => res.json())
                     .then(pageData => ({ totalCount, reviews: pageData.reviewDtoList || [] }));
             })
@@ -229,57 +253,36 @@
                 reviews.forEach(rev => {
                     const tr = document.createElement("tr");
                     tr.innerHTML = `
-              <td>${rev.username}</td>
-              <td>${rev.menuName}</td>
-              <td>${rev.content || ""}</td>
-              <td>${rev.image
-                        ? `<img src="data:${rev.imageContentType};base64,${rev.image}"
-                        style="width:60px;height:60px;object-fit:cover;">`
-                        : ""}</td>
-              <td>${rev.createdAt
-                        ? new Date(rev.createdAt).toLocaleDateString()
-                        : ""}</td>
-              <td>${rev.updatedAt
-                        ? new Date(rev.updatedAt).toLocaleDateString()
-                        : ""}</td>`;
+            <td>${rev.username}</td>
+            <td>${rev.menuName}</td>
+            <td>${rev.content || ""}</td>
+            <td>${rev.image ? `<img src="data:${rev.imageContentType};base64,${rev.image}" style="width:60px;height:60px;object-fit:cover;">` : ""}</td>
+            <td>${rev.createdAt ? new Date(rev.createdAt).toLocaleDateString() : ""}</td>
+            <td>${rev.updatedAt ? new Date(rev.updatedAt).toLocaleDateString() : ""}</td>`;
                     tbody.appendChild(tr);
                 });
 
-                // 페이지네이션 렌더링
-                const totalPages = Math.ceil(totalCount / reviewPageSize);
                 const ul = document.getElementById("reviewPagination");
                 ul.innerHTML = "";
+                const totalPages = Math.ceil(totalCount / reviewPageSize);
 
-                // Previous
-                const prevLi = document.createElement("li");
-                prevLi.className = "page-item" + (pageNumber === 0 ? " disabled" : "");
-                const prevA = document.createElement("a");
-                prevA.className = "page-link"; prevA.href = "#"; prevA.textContent = "Previous";
-                prevA.onclick = e => { e.preventDefault(); if (pageNumber > 0) loadReviews(pageNumber - 1); };
-                prevLi.appendChild(prevA); ul.appendChild(prevLi);
-
-                // 숫자 페이지
-                for (let i = 0; i < totalPages; i++) {
+                const makePage = (label, disabled, handler) => {
                     const li = document.createElement("li");
-                    li.className = "page-item" + (i === pageNumber ? " active" : "");
+                    li.className = "page-item" + (disabled ? " disabled" : "");
                     const a = document.createElement("a");
-                    a.className = "page-link"; a.href = "#"; a.textContent = i + 1;
-                    a.onclick = e => { e.preventDefault(); loadReviews(i); };
+                    a.className = "page-link"; a.href = "#"; a.textContent = label;
+                    a.onclick = e => { e.preventDefault(); handler(); };
                     li.appendChild(a); ul.appendChild(li);
-                }
+                };
 
-                // Next
-                const nextLi = document.createElement("li");
-                nextLi.className = "page-item" + (pageNumber >= totalPages - 1 ? " disabled" : "");
-                const nextA = document.createElement("a");
-                nextA.className = "page-link"; nextA.href = "#"; nextA.textContent = "Next";
-                nextA.onclick = e => { e.preventDefault(); if (pageNumber < totalPages - 1) loadReviews(pageNumber + 1); };
-                nextLi.appendChild(nextA); ul.appendChild(nextLi);
-            })
-            .catch(err => console.error("Error loading reviews:", err));
+                makePage("Previous", pageNumber === 0, () => loadReviews(pageNumber - 1));
+                for (let i = 0; i < totalPages; i++) {
+                    makePage(i + 1, false, () => loadReviews(i));
+                }
+                makePage("Next", pageNumber >= totalPages - 1, () => loadReviews(pageNumber + 1));
+            });
     }
 
-    // 메뉴 모달 초기화
     function onMenuModalShow(e) {
         const trigger = e.relatedTarget;
         if (!trigger) return;
@@ -293,7 +296,6 @@
         }
     }
 
-    // 메뉴 수정 모달 열기
     function openEditModal(id) {
         fetch(`/api/admin/menus/${id}`)
             .then(res => res.json())
@@ -309,44 +311,157 @@
                 }
                 document.getElementById("menuModalLabel").textContent = "메뉴 수정";
                 new bootstrap.Modal(document.getElementById("menuModal")).show();
-            })
-            .catch(err => console.error("Error fetching menu:", err));
+            });
     }
 
-    // 메뉴 저장
     function saveMenu(e) {
         e.preventDefault();
         const form = e.target;
         const formData = new FormData(form);
         const id = formData.get("menuId");
         if (!formData.get("imageFile")) formData.delete("imageFile");
-        const url = id
-            ? `/api/admin/menus/${id}`
-            : `/api/admin/stores/${storeId}/menus`;
+        const url = id ? `/api/admin/menus/${id}` : `/api/admin/stores/${storeId}/menus`;
         const method = id ? "PUT" : "POST";
-        fetch(url, { method, body: formData })
-            .then(() => {
-                bootstrap.Modal.getInstance(document.getElementById("menuModal")).hide();
-                loadMenus();
-            })
-            .catch(err => console.error("Error saving menu:", err));
+        fetch(url, {
+            method,
+            body: formData,
+            headers: { 'X-XSRF-TOKEN': document.getElementById('_csrf').value }
+        }).then(() => {
+            bootstrap.Modal.getInstance(document.getElementById("menuModal")).hide();
+            loadMenus();
+        });
     }
 
-    // 메뉴 삭제
-    function deleteMenu(id) {
-        if (!confirm("해당 메뉴를 삭제하시겠습니까?")) return;
-        fetch(`/api/admin/menus/${id}`, { method: "DELETE" })
-            .then(() => loadMenus())
-            .catch(err => console.error("Error deleting menu:", err));
+    // --- 예약 기능 ---
+    function loadReservations() {
+        fetch(`/api/reservation/${storeId}`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById("reservationTableBody");
+                tbody.innerHTML = "";
+                (data.reservationDtoList || []).forEach(r => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${r.reservationId}</td>
+                        <td>${r.visitDate}</td>
+                        <td>${r.slotStartTime}</td>
+                        <td>${new Date(r.createdAt).toLocaleDateString()}</td>
+                        <td>${r.status}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-secondary me-1" onclick="changeStatus(${r.reservationId})">상태변경</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteReservation(${r.reservationId})">삭제</button>
+                        </td>`;
+                    tbody.appendChild(tr);
+                });
+            });
     }
 
-    // 가게 삭제
+    function changeStatus(resId) {
+        fetch(`/api/reservation/${storeId}/${resId}`, {
+            method: "PATCH",
+            headers: { 'X-XSRF-TOKEN': document.getElementById('_csrf').value }
+        }).then(() => loadReservations());
+    }
+
+    function deleteReservation(resId) {
+        if (!confirm("해당 예약을 삭제하시겠습니까?")) return;
+        fetch(`/api/reservation/${storeId}/${resId}`, {
+            method: "DELETE",
+            headers: { 'X-XSRF-TOKEN': document.getElementById('_csrf').value }
+        }).then(() => loadReservations());
+    }
+
+    // --- 슬롯 기능 ---
+    function loadSlots() {
+        fetch(`/owner/slots?storeId=${storeId}`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById("slotTableBody");
+                tbody.innerHTML = "";
+                (data || []).forEach(slot => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${slot.slotId}</td>
+                        <td>${slot.startTime}</td>
+                        <td>${slot.endTime}</td>
+                        <td>${slot.allowedMembership}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteSlot(${slot.slotId})">삭제</button>
+                        </td>`;
+                    tbody.appendChild(tr);
+                });
+            });
+    }
+
+    function saveSlot(e) {
+        e.preventDefault();
+        const form = e.target;
+        const body = {
+            storeId: Number(storeId),
+            startTime: form.startTime.value,
+            endTime: form.endTime.value,
+            allowedMembership: form.allowedMembership.value
+        };
+        fetch(`/owner/slots`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN': document.getElementById('_csrf').value
+            },
+            body: JSON.stringify(body)
+        }).then(() => {
+            bootstrap.Modal.getInstance(document.getElementById('slotModal')).hide();
+            loadSlots();
+        });
+    }
+
+    function deleteSlot(slotId) {
+        if (!confirm("해당 슬롯을 삭제하시겠습니까?")) return;
+        fetch(`/owner/slots/${slotId}`, {
+            method: "DELETE",
+            headers: { 'X-XSRF-TOKEN': document.getElementById('_csrf').value }
+        }).then(() => loadSlots());
+    }
+
     function deleteStore() {
         if (!confirm("정말 이 가게를 삭제하시겠습니까?")) return;
-        fetch(`/api/admin/stores/${storeId}`, { method: "DELETE" })
-            .then(() => location.href = "/dashboard.html")
-            .catch(err => console.error("Error deleting store:", err));
+        fetch(`/api/admin/stores/${storeId}`, {
+            method: "DELETE",
+            headers: { 'X-XSRF-TOKEN': document.getElementById('_csrf').value }
+        }).then(() => location.href = "/dashboard.html");
     }
+
+    function deleteMenu(id) {
+        if (!confirm("해당 메뉴를 삭제하시겠습니까?")) return;
+        fetch(`/api/admin/menus/${id}`, {
+            method: "DELETE",
+            headers: { 'X-XSRF-TOKEN': document.getElementById('_csrf').value }
+        }).then(() => loadMenus());
+    }
+
+    function deleteStore() {
+        if (!confirm("정말 이 가게를 삭제하시겠습니까?")) return;
+        fetch(`/api/admin/stores/${storeId}`, {
+            method: "DELETE",
+            headers: { 'X-XSRF-TOKEN': document.getElementById('_csrf').value }
+        }).then(() => location.href = "/dashboard.html");
+    }
+
+    // CSRF 토큰 세팅
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const csrfRes = await fetch('/csrf-token', { credentials: 'same-origin' });
+            const text = await csrfRes.text();
+            if (text) {
+                const csrfData = JSON.parse(text);
+                document.getElementById('_csrf').value = csrfData.token;
+            } else {
+                console.warn('CSRF 응답이 비어있습니다.');
+            }
+        } catch (err) {
+            console.error('CSRF 토큰 로딩 중 오류:', err);
+        }
+    });
 </script>
 </body>
 </html>
