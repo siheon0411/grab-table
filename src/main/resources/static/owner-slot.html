@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>예약 시간대 관리</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input, select, button { display: block; margin-bottom: 12px; padding: 6px; width: 250px; }
+        table { margin-top: 20px; border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        #result { margin-top: 15px; color: green; }
+    </style>
+    <style>
+        .timeline {
+            display: flex;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            height: 40px;
+            position: relative;
+        }
+        .slot-block {
+            height: 100%;
+            text-align: center;
+            line-height: 40px;
+            color: white;
+            font-weight: bold;
+            border-right: 1px solid white;
+            flex-shrink: 0;
+        }
+        .gold { background-color: #FFD700; color: black; }
+        .silver { background-color: #C0C0C0; color: black; }
+        .bronze { background-color: #CD7F32; color: white; }
+    </style>
+</head>
+<body>
+
+<h2>사장님 예약 가능 시간대 등록</h2>
+
+<form id="slotForm">
+    <label>가게 ID: <input type="number" id="storeId" required></label>
+    <label>시작 시간: <input type="time" id="startTime" required></label>
+    <label>종료 시간: <input type="time" id="endTime" required></label>
+    <label>허용 등급:
+        <select id="allowedMembership" required>
+            <option value="GOLD">GOLD</option>
+            <option value="SILVER">SILVER</option>
+            <option value="BRONZE">BRONZE</option>
+        </select>
+    </label>
+    <button type="submit">시간대 등록</button>
+</form>
+
+<div id="result"></div>
+
+<h3>등록된 시간대 목록</h3>
+<button onclick="loadSlots()">시간대 새로고침</button>
+<table id="slotTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>시작 시간</th>
+        <th>종료 시간</th>
+        <th>등급</th>
+        <th>삭제</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<div id="timelineContainer"></div>
+
+<script>
+    const form = document.getElementById("slotForm");
+    const resultDiv = document.getElementById("result");
+    const tableBody = document.querySelector("#slotTable tbody");
+
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const storeId = document.getElementById("storeId").value;
+        const startTime = document.getElementById("startTime").value;
+        const endTime = document.getElementById("endTime").value;
+        const allowedMembership = document.getElementById("allowedMembership").value;
+
+        const requestBody = { storeId, startTime, endTime, allowedMembership };
+
+        try {
+            const response = await fetch("/owner/slots", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify(requestBody)
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                resultDiv.innerText = `✅ 등록 완료: ${data.startTime}~${data.endTime} (${data.allowedMembership})`;
+                loadSlots(); // 등록 후 목록 갱신
+            } else {
+                resultDiv.innerText = "❌ 등록 실패: 권한 오류 또는 요청 오류";
+            }
+        } catch (err) {
+            console.error("에러 발생:", err);
+            resultDiv.innerText = "⚠️ 서버 오류 발생";
+        }
+    });
+
+    async function loadSlots() {
+        const storeId = document.getElementById("storeId").value;
+        if (!storeId) return;
+
+        try {
+            const response = await fetch(`/owner/slots?storeId=${storeId}`, {
+                method: "GET",
+                credentials: "include"
+            });
+
+            if (!response.ok) {
+                resultDiv.innerText = "❌ 시간대 불러오기 실패";
+                return;
+            }
+
+            const slots = await response.json();
+            tableBody.innerHTML = "";
+
+            slots.forEach(slot => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+            <td>${slot.slotId}</td>
+            <td>${slot.startTime}</td>
+            <td>${slot.endTime}</td>
+            <td>${slot.allowedMembership}</td>
+            <td><button onclick="deleteSlot(${slot.slotId})">삭제</button></td>
+          `;
+                tableBody.appendChild(row);
+            });
+
+        } catch (err) {
+            console.error("에러 발생:", err);
+            resultDiv.innerText = "⚠️ 서버 오류 발생";
+        }
+    }
+
+    async function deleteSlot(slotId) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        try {
+            const response = await fetch(`/owner/slots/${slotId}`, {
+                method: "DELETE",
+                credentials: "include"
+            });
+
+            if (response.ok) {
+                resultDiv.innerText = `🗑️ 슬롯 ${slotId} 삭제 완료`;
+                loadSlots();
+            } else {
+                resultDiv.innerText = "❌ 삭제 실패: 권한 또는 서버 오류";
+            }
+        } catch (err) {
+            console.error("삭제 에러:", err);
+            resultDiv.innerText = "⚠️ 삭제 중 오류 발생";
+        }
+    }
+
+    async function loadSlots() {
+        const storeId = document.getElementById("storeId").value;
+        if (!storeId) return;
+
+        try {
+            const response = await fetch(`/owner/slots?storeId=${storeId}`, {
+                method: "GET",
+                credentials: "include"
+            });
+
+            if (!response.ok) {
+                resultDiv.innerText = "❌ 시간대 불러오기 실패";
+                return;
+            }
+
+            const slots = await response.json();
+            tableBody.innerHTML = "";
+            document.getElementById("timelineContainer").innerHTML = "";
+
+            // 표에 표시
+            slots.forEach(slot => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+          <td>${slot.slotId}</td>
+          <td>${slot.startTime}</td>
+          <td>${slot.endTime}</td>
+          <td>${slot.allowedMembership}</td>
+          <td><button onclick="deleteSlot(${slot.slotId})">삭제</button></td>
+        `;
+                tableBody.appendChild(row);
+            });
+
+            // 시각화 타임라인 생성
+            const timeline = document.createElement("div");
+            timeline.classList.add("timeline");
+
+            const getHour = timeStr => parseInt(timeStr.split(":")[0]);
+
+            for (let hour = 10; hour < 22; hour++) {
+                const slot = slots.find(s => getHour(s.startTime) === hour);
+                const block = document.createElement("div");
+                block.style.flexBasis = "8.33%"; // 12칸 (12시간)
+                if (slot) {
+                    block.classList.add("slot-block");
+                    block.classList.add(slot.allowedMembership.toLowerCase());
+                    block.innerText = `${slot.startTime}`;
+                } else {
+                    block.style.backgroundColor = "#eee";
+                }
+                timeline.appendChild(block);
+            }
+
+            document.getElementById("timelineContainer").appendChild(timeline);
+        } catch (err) {
+            console.error("에러 발생:", err);
+            resultDiv.innerText = "⚠️ 서버 오류 발생";
+        }
+    }
+</script>
+
+</body>
+</html>
