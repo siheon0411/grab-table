@@ -10,39 +10,70 @@
 <div class="wrapper">
   <div class="container">
     <div class="sign-in-container">
-      <form id="loginForm">
-        <h1>Sign In</h1>
+      <div class="box">
+        <h1>사장 로그인</h1>
         <br>
-        <input type="email" id="email" name="email" placeholder="Email" required>
-        <input type="password" id="password" name="password" placeholder="Password" required>
-        <button class="form_btn" type="submit">Sign In</button>
+        <input type="text" class="box_input" id="email" name="email" placeholder="Email" required>
+        <input type="password" class="box_input" id="password" name="password" placeholder="Password" required>
+
+        <!-- Add hidden input for CSRF token -->
+        <input type="hidden" name="_csrf" value="" id="_csrf">
+
+        <button id="btnLogin" class="form_btn">Sign In</button>
+
         <p id="result" style="color:red;"></p>
-      </form>
+      </div>
     </div>
 
     <div class="overlay-container">
       <div class="overlay-right">
-        <h1>Grab_Table</h1>
+        <h1>Grab Table</h1>
         <p>계정이 없으신가요?</p>
-        <button id="signUp" class="overlay_btn" onclick="location.href='/register.html'">Sign Up</button>
+        <button id="signUp" class="overlay_btn" onclick="location.href='/register'">Sign Up</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  document.getElementById('loginForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
+  window.onload = function () {
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    getCsrfToken();
+
+    document.querySelector("#btnLogin").onclick = login;
+  }
+
+  async function getCsrfToken(){
+    let response = await fetch('/csrf-token', { method: 'GET', credentials: 'same-origin' });
+    let data = await response.json();
+    document.querySelector('#_csrf').value = data.token;
+  }
+
+  async function login() {
+
+    let email = document.querySelector("#email").value;
+    let password = document.querySelector('#password').value;
+    let _csrf = document.querySelector("#_csrf").value;
+
+    let urlParams = new URLSearchParams({
+      email, password, _csrf
+    });
+
+    // url
+    let url = "/login";
+
+    // post, parameter
+//    let fetchOptions = {
+//      method: "POST",
+//      body: urlParams
+//    }
 
     try {
       const params = new URLSearchParams();
       params.append('email', email);
       params.append('password', password);
 
-      const response = await fetch('/login', {
+      const response = await fetch(url, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -54,16 +85,16 @@
       const result = await response.json();
 
       if (response.ok && result.result === 'success') {
-        location.href = '/owner-info.html';
+        location.href = '/dashboard.html';
       } else {
-        document.getElementById('result').innerText = '로그인 실패. 이메일 또는 비밀번호를 확인하세요.';
+        document.querySelector('#result').innerText = '로그인 실패. 이메일 또는 비밀번호를 확인하세요.';
       }
 
     } catch (error) {
       console.error('에러 발생:', error);
-      document.getElementById('result').innerText = '서버 오류 발생';
+      document.querySelector('#result').innerText = '서버 오류 발생';
     }
-  });
+  }
 </script>
 </body>
 </html>

@@ -30,5 +30,4 @@ public class ReservationSlot {
     public enum MembershipLevel {
         GOLD, SILVER, BRONZE
     }
-
 }
