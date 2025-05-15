@@ -22,7 +22,6 @@ public class ReservationSlot {
     private Store store;
 
     private String startTime;
-
     private String endTime;
 
     @Enumerated(EnumType.STRING)
