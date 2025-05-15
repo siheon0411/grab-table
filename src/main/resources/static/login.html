@@ -13,7 +13,7 @@
       <div class="box">
         <h1>사장 로그인</h1>
         <br>
-        <input type="text" class="box_input" id="username" name="username" placeholder="Email" required>
+        <input type="text" class="box_input" id="email" name="email" placeholder="Email" required>
         <input type="password" class="box_input" id="password" name="password" placeholder="Password" required>
 
         <!-- Add hidden input for CSRF token -->
@@ -51,32 +51,41 @@
 
   async function login() {
 
-    let username = document.querySelector("#username").value;
+    let email = document.querySelector("#email").value;
     let password = document.querySelector('#password').value;
     let _csrf = document.querySelector("#_csrf").value;
 
     let urlParams = new URLSearchParams({
-      username, password, _csrf
+      email, password, _csrf
     });
 
     // url
     let url = "/login";
 
     // post, parameter
-    let fetchOptions = {
-      method: "POST",
-      body: urlParams
-    }
+//    let fetchOptions = {
+//      method: "POST",
+//      body: urlParams
+//    }
 
     try {
-      let response = await fetch(url, fetchOptions);
-      let data = await response.json();
+      const params = new URLSearchParams();
+      params.append('email', email);
+      params.append('password', password);
 
-      if (data.result === 'success') {
-        alert("로그인 성공!");
-        console.log(data);
-        location.href = '/owner-info.html';
+      const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params
+      });
 
+      const result = await response.json();
+
+      if (response.ok && result.result === 'success') {
+        location.href = '/dashboard.html';
       } else {
         document.querySelector('#result').innerText = '로그인 실패. 이메일 또는 비밀번호를 확인하세요.';
       }
