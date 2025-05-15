@@ -1,101 +1,89 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>로그인 페이지</title>
-  <link rel="stylesheet" href="/css/login.css">
+    <meta charset="UTF-8">
+    <title>로그인 페이지</title>
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
 
 <div class="wrapper">
-  <div class="container">
-    <div class="sign-in-container">
-      <div class="box">
-        <h1>사장 로그인</h1>
-        <br>
+    <div class="container">
+        <div class="sign-in-container">
+            <div class="box">
+                <h1>사장 로그인</h1>
+                <br>
+                <input type="text" class="box_input" id="email" name="email" placeholder="Email" required>
+                <input type="password" class="box_input" id="password" name="password" placeholder="Password" required>
 
-        <input type="text" class="box_input" id="email" name="email" placeholder="Email" required>
-        <input type="password" class="box_input" id="password" name="password" placeholder="Password" required>
+                <!-- Add hidden input for CSRF token -->
+                <input type="hidden" name="_csrf" value="" id="_csrf">
 
-        <!-- Add hidden input for CSRF token -->
-        <input type="hidden" name="_csrf" value="" id="_csrf">
+                <button id="btnLogin" class="form_btn">Sign In</button>
 
-        <button id="btnLogin" class="form_btn">Sign In</button>
+                <p id="result" style="color:red;"></p>
+            </div>
+        </div>
 
-        <p id="result" style="color:red;"></p>
-      </div>
+        <div class="overlay-container">
+            <div class="overlay-right">
+                <h1>Grab Table</h1>
+                <p>계정이 없으신가요?</p>
+                <button id="signUp" class="overlay_btn" onclick="location.href='/register'">Sign Up</button>
+            </div>
+        </div>
     </div>
-
-    <div class="overlay-container">
-      <div class="overlay-right">
-        <h1>Grab Table</h1>
-        <p>계정이 없으신가요?</p>
-        <button id="signUp" class="overlay_btn" onclick="location.href='/register'">Sign Up</button>
-      </div>
-    </div>
-  </div>
 </div>
 
+
 <script>
-  window.onload = function () {
+    window.onload = function () {
 
-    getCsrfToken();
+        getCsrfToken();
 
-    document.querySelector("#btnLogin").onclick = login;
-  }
-
-  async function getCsrfToken(){
-    let response = await fetch('/csrf-token', { method: 'GET', credentials: 'same-origin' });
-    let data = await response.json();
-    document.querySelector('#_csrf').value = data.token;
-  }
-
-  async function login() {
-
-    let email = document.querySelector("#email").value;
-    let password = document.querySelector('#password').value;
-    let _csrf = document.querySelector("#_csrf").value;
-
-    let urlParams = new URLSearchParams({
-      email, password, _csrf
-    });
-
-    // url
-    let url = "/login";
-
-    // post, parameter
-//    let fetchOptions = {
-//      method: "POST",
-//      body: urlParams
-//    }
-
-    try {
-      const params = new URLSearchParams();
-      params.append('email', email);
-      params.append('password', password);
-
-      const response = await fetch(url, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: params
-      });
-
-      const result = await response.json();
-
-      if (response.ok && result.result === 'success') {
-        location.href = '/dashboard.html';
-      } else {
-        document.querySelector('#result').innerText = '로그인 실패. 이메일 또는 비밀번호를 확인하세요.';
-      }
-
-    } catch (error) {
-      console.error('에러 발생:', error);
-      document.querySelector('#result').innerText = '서버 오류 발생';
+        document.querySelector("#btnLogin").onclick = login;
     }
-  }
+
+    async function getCsrfToken(){
+        let response = await fetch('/csrf-token', { method: 'GET', credentials: 'same-origin' });
+        let data = await response.json();
+        document.querySelector('#_csrf').value = data.token;
+    }
+
+    async function login() {
+
+        let username = document.querySelector("#email").value;
+        let password = document.querySelector('#password').value;
+        let _csrf = document.querySelector("#_csrf").value;
+
+        let urlParams = new URLSearchParams({
+            username, password, _csrf
+        });
+
+        // url
+        let url = "/login";
+
+        // post, parameter
+        let fetchOptions = {
+         method: "POST",
+         body: urlParams
+        }
+
+        try {
+            const response = await fetch(url, fetchOptions)
+            const result = await response.json();
+
+            if (response.ok && result.result === 'success') {
+                location.href = '/dashboard';
+            } else {
+                document.querySelector('#result').innerText = '로그인 실패. 이메일 또는 비밀번호를 확인하세요.';
+            }
+
+        } catch (error) {
+            console.error('에러 발생:', error);
+            document.querySelector('#result').innerText = '서버 오류 발생';
+        }
+    }
 </script>
 </body>
 </html>
