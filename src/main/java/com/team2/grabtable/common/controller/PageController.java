@@ -16,4 +16,14 @@ public class PageController {
         return "/login.html";
     }
 
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "/dashboard.html";
+    }
+
+    @GetMapping("/store-register")
+    public String storeRegister() {
+        return "/store-register.html";
+    }
+
 }

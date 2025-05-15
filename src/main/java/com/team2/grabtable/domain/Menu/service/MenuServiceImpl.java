@@ -159,8 +159,10 @@ public class MenuServiceImpl implements MenuService {
                 if (menu.getStore().getOwner().getOwnerId().equals(ownerDetails.getOwner().getOwnerId())) {
                     menu.setName(menuRegisterDto.getName());
                     menu.setPrice(menuRegisterDto.getPrice());
-                    menu.setImage(menuRegisterDto.getImageFile().getBytes());
-                    menu.setImageContentType(menuRegisterDto.getImageFile().getContentType());
+                    if (menu.getImage() != null) {
+                        menu.setImage(menuRegisterDto.getImageFile().getBytes());
+                        menu.setImageContentType(menuRegisterDto.getImageFile().getContentType());
+                    }
                     menuRepository.save(menu);
                     menuResultDto.setResult("success");
                 } else {
