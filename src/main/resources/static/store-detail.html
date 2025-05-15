@@ -5,6 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>가게 상세보기 | CatchTable</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        /* Timeline Styles */
+        .timeline {
+            position: relative;
+            height: 40px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .timeline .marker {
+            position: absolute;
+            top: 100%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .slot {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            border-radius: 4px;
+            opacity: 0.8;
+        }
+        .slot-GOLD { background-color: rgba(255,193,7,0.7); }
+        .slot-SILVER { background-color: rgba(108,117,125,0.7); }
+        .slot-BRONZE { background-color: rgba(165,42,42,0.7); }
+        .badge-bronze { background-color: #a52a2a; color: #fff; }
+    </style>
 </head>
 <body>
 <!-- CSRF Token Hidden -->
@@ -96,14 +125,19 @@
                 <h5>예약 시간대 설정</h5>
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#slotModal">시간대 추가</button>
             </div>
-            <table class="table table-hover">
+            <!-- Legend -->
+            <div id="slotLegend" class="mb-3">
+                <span class="badge bg-warning text-dark me-1">GOLD</span>
+                <span class="badge bg-secondary me-1">SILVER</span>
+                <span class="badge badge-bronze">BRONZE</span>
+            </div>
+            <!-- Timeline -->
+            <div id="slotTimeline" class="timeline"></div>
+            <!-- Optional Table for Details -->
+            <table class="table table-sm mt-3">
                 <thead>
                 <tr>
-                    <th>슬롯ID</th>
-                    <th>시작시간</th>
-                    <th>종료시간</th>
-                    <th>허용 멤버십</th>
-                    <th>작업</th>
+                    <th>슬롯ID</th><th>시작시간</th><th>종료시간</th><th>멤버십</th><th>작업</th>
                 </tr>
                 </thead>
                 <tbody id="slotTableBody"></tbody>
@@ -194,14 +228,14 @@
         loadMenus();
         loadReviews(0);
         loadReservations();
-        loadSlots();
 
         document.getElementById("deleteStoreBtn").addEventListener("click", deleteStore);
         document.getElementById("menuModal").addEventListener("show.bs.modal", onMenuModalShow);
         document.getElementById("menuForm").addEventListener("submit", saveMenu);
 
-        document.getElementById("slotForm").addEventListener("submit", saveSlot);
         document.getElementById('slotStoreId').value = storeId;
+        loadSlots();
+        document.getElementById("slotForm").addEventListener("submit", saveSlot);
     });
 
     async function loadStore() {
@@ -371,26 +405,53 @@
         }).then(() => loadReservations());
     }
 
-    // --- 슬롯 기능 ---
-    function loadSlots() {
-        fetch(`/owner/slots?storeId=${storeId}`)
-            .then(res => res.json())
-            .then(data => {
-                const tbody = document.getElementById("slotTableBody");
-                tbody.innerHTML = "";
-                (data || []).forEach(slot => {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td>${slot.slotId}</td>
-                        <td>${slot.startTime}</td>
-                        <td>${slot.endTime}</td>
-                        <td>${slot.allowedMembership}</td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteSlot(${slot.slotId})">삭제</button>
-                        </td>`;
-                    tbody.appendChild(tr);
-                });
-            });
+    // Load & Render Slots
+    async function loadSlots() {
+        const res = await fetch(`/owner/slots?storeId=${storeId}`);
+        const slots = await res.json();
+
+        // Table
+        const tbody = document.getElementById('slotTableBody');
+        tbody.innerHTML = '';
+        slots.forEach(slot => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${slot.slotId}</td>
+                <td>${slot.startTime}</td>
+                <td>${slot.endTime}</td>
+                <td>${slot.allowedMembership}</td>
+                <td><button class="btn btn-sm btn-outline-danger" onclick="deleteSlot(${slot.slotId})">삭제</button></td>`;
+            tbody.appendChild(tr);
+        });
+
+        // Timeline
+        const timeline = document.getElementById('slotTimeline');
+        timeline.innerHTML = '';
+        // Hour markers
+        for (let h = 0; h <= 24; h += 2) {
+            const marker = document.createElement('div');
+            marker.className = 'marker';
+            marker.style.left = `${(h / 24) * 100}%`;
+            marker.textContent = `${h}:00`;
+            timeline.appendChild(marker);
+        }
+        // Slot blocks
+        slots.forEach(slot => {
+            const [sh, sm] = slot.startTime.split(':').map(Number);
+            const [eh, em] = slot.endTime.split(':').map(Number);
+            const startMin = sh * 60 + sm;
+            const endMin = eh * 60 + em;
+            const total = 24 * 60;
+            const left = (startMin / total) * 100;
+            const width = ((endMin - startMin) / total) * 100;
+
+            const block = document.createElement('div');
+            block.className = `slot slot-${slot.allowedMembership}`;
+            block.style.left = `${left}%`;
+            block.style.width = `${width}%`;
+            block.title = `${slot.allowedMembership} | ${slot.startTime} - ${slot.endTime}`;
+            timeline.appendChild(block);
+        });
     }
 
     function saveSlot(e) {
