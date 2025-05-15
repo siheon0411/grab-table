@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>가게 등록 | CatchTable</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="#">GrabTable</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/dashboard.html">대시보드</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">가게 등록</a></li>
+                <li class="nav-item"><a class="nav-link" href="/logout">로그아웃</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- 가게 등록 폼 -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">가게 등록</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Thymeleaf 템플릿으로 처리 시 th:action, th:object 유지 -->
+                    <!-- 정적 HTML 사용 시 name 속성으로 바인딩 -->
+                    <form action="/api/admin/stores" th:action="@{/api/admin/stores}" th:object="${storeRegisterDto}" method="post" enctype="multipart/form-data">
+
+                        <!-- 로그인된 오너 ID -->
+                        <input type="hidden" name="ownerId" th:field="*{ownerId}" />
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">가게명</label>
+                            <input type="text" id="name" name="name" th:field="*{name}" class="form-control" placeholder="가게명을 입력하세요" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="location" class="form-label">주소</label>
+                            <input type="text" id="location" name="location" th:field="*{location}" class="form-control" placeholder="도로명 주소를 검색하세요" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="type" class="form-label">업종</label>
+                            <select id="type" name="type" th:field="*{type}" class="form-select" required>
+                                <option value="" disabled th:text="'업종을 선택하세요'"></option>
+                                <option value="한식">한식</option>
+                                <option value="중식">중식</option>
+                                <option value="일식">일식</option>
+                                <option value="양식">양식</option>
+                                <option value="퓨전">퓨전</option>
+                                <option value="패스트푸드">패스트푸드</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="imageFile" class="form-label">대표 이미지</label>
+                            <input type="file" id="imageFile" name="imageFile" th:field="*{imageFile}" class="form-control" accept="image/*" required>
+                        </div>
+
+                        <!-- 이미지 미리보기 -->
+                        <div class="mb-3 text-center">
+                            <img id="imgPreview" class="img-fluid rounded" style="display:none; max-height:200px;" alt="이미지 미리보기">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">가게 등록하기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // 이미지 선택 시 미리보기 기능
+    document.getElementById('imageFile').addEventListener('change', function(e) {
+        const [file] = e.target.files;
+        if (file) {
+            const preview = document.getElementById('imgPreview');
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>
