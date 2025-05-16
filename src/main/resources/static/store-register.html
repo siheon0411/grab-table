@@ -35,7 +35,10 @@
                 <div class="card-body">
                     <!-- Thymeleaf 템플릿으로 처리 시 th:action, th:object 유지 -->
                     <!-- 정적 HTML 사용 시 name 속성으로 바인딩 -->
-                    <form action="/api/admin/stores" th:action="@{/api/admin/stores}" th:object="${storeRegisterDto}" method="post" enctype="multipart/form-data">
+                    <form id="storeForm" action="/api/admin/stores" th:action="@{/api/admin/stores}" th:object="${storeRegisterDto}" method="post" enctype="multipart/form-data">
+
+                        <!-- CSRF 토큰 필드 -->
+                        <input type="hidden" id="_csrf" name="" value="">
 
                         <!-- 로그인된 오너 ID -->
                         <input type="hidden" name="ownerId" th:field="*{ownerId}" />
@@ -90,6 +93,49 @@
             const preview = document.getElementById('imgPreview');
             preview.src = URL.createObjectURL(file);
             preview.style.display = 'block';
+        }
+    });
+
+    // CSRF 토큰을 받아와 히든 필드에 세팅
+    let csrfParam, csrfToken;
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const res = await fetch('/csrf-token', { credentials: 'same-origin' });
+            ({ parameterName: csrfParam, token: csrfToken } = await res.json());
+            const input = document.getElementById('_csrf');
+            input.name = csrfParam;
+            input.value = csrfToken;
+        } catch (err) {
+            console.error('CSRF 토큰 로딩 실패', err);
+        }
+    });
+
+    // 폼 제출 인터셉트 → fetch로 보내기 (헤더에 X-XSRF-TOKEN)
+    document.getElementById('storeForm').addEventListener('submit', async e => {
+        e.preventDefault();
+
+        const form = e.target;
+        const url = form.getAttribute('action');
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'X-XSRF-TOKEN': csrfToken
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            // 성공 시 대시보드로 이동
+            window.location.href = '/dashboard';
+        } catch (err) {
+            console.error('가게 등록 실패', err);
+            alert('가게 등록 중 오류가 발생했습니다.');
         }
     });
 </script>
