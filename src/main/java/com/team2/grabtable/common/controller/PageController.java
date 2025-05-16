@@ -16,6 +16,11 @@ public class PageController {
         return "/login.html";
     }
 
+    @GetMapping("/logout")
+    public String logout() {
+        return "/login.html";
+    }
+
     @GetMapping("/dashboard")
     public String dashboard() {
         return "/dashboard.html";
@@ -25,5 +30,4 @@ public class PageController {
     public String storeRegister() {
         return "/store-register.html";
     }
-
 }

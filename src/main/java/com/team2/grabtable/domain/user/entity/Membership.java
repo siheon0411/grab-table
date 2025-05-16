@@ -14,6 +14,5 @@ public class Membership {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long membershipId;
-
     private String name;
 }
