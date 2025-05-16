@@ -13,6 +13,9 @@
             <form id="registerForm">
                 <h1>Sign Up</h1>
                 <br/>
+                <!-- CSRF 토큰 필드 -->
+                <input type="hidden" id="_csrf" name="" value="">
+
                 <input type="email" id="email" name="email" placeholder="Email" required>
                 <input type="text" id="name" name="name" placeholder="Name" required>
                 <input type="password" id="password" name="password" placeholder="Password" required>
@@ -33,19 +36,41 @@
 </div>
 
 <script>
+    let csrfParam, csrfToken;
+
+    // 1) 페이지 로드 시 CSRF 토큰 받아오기
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const res = await fetch('/csrf-token', { credentials: 'same-origin' });
+            const data = await res.json();
+            csrfParam = data.parameterName;
+            csrfToken = data.token;
+
+            // 히든 필드에 파라미터 이름과 토큰 값을 세팅
+            const input = document.getElementById('_csrf');
+            input.name  = csrfParam;
+            input.value = csrfToken;
+        } catch (err) {
+            console.error('CSRF 토큰 로딩 실패:', err);
+        }
+    });
+
+    // 2) 폼 제출 인터셉트 → fetch로 전송 (헤더에 X-XSRF-TOKEN 포함)
     document.getElementById('registerForm').addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        const email = document.getElementById('email').value;
-        const name = document.getElementById('name').value;
-        const password = document.getElementById('password').value;
+        const email     = document.getElementById('email').value;
+        const name      = document.getElementById('name').value;
+        const password  = document.getElementById('password').value;
         const birthdate = document.getElementById('birthdate').value;
 
         try {
             const response = await fetch('/owner/register', {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken    // CSRF 토큰 헤더
                 },
                 body: JSON.stringify({ email, name, password, birthdate })
             });
@@ -55,9 +80,10 @@
 
             if (response.ok) {
                 alert('회원가입이 완료되었습니다! 로그인해주세요.');
-                location.href = '/auth.html';
+                location.href = '/login';
             } else {
-                document.getElementById('result').innerText = '회원가입 실패: ' + (result.message || '서버 오류');
+                document.getElementById('result').innerText =
+                    '회원가입 실패: ' + (result.message || '서버 오류');
             }
 
         } catch (error) {
@@ -65,6 +91,7 @@
             document.getElementById('result').innerText = '서버 오류 발생';
         }
     });
+
 </script>
 
 </body>
