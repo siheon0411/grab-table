@@ -13,7 +13,7 @@ public interface StoreService {
 
     StoreResultDto getStoreDetail(OwnerDetails ownerDetails, Long storeId);
 
-    StoreImageDto getStoreImage(OwnerDetails ownerDetails, Long storeId);
+//    StoreImageDto getStoreImage(OwnerDetails ownerDetails, Long storeId);
 
     StoreResultDto insertStore(OwnerDetails ownerDetails, StoreRegisterDto storeRegisterDto) throws IOException;
 
@@ -21,6 +21,6 @@ public interface StoreService {
 
     StoreResultDto deleteStore(OwnerDetails ownerDetails, Long storeId);
 
-    StoreResultDto countStoresByOwnerId(Long ownerId);
+//    StoreResultDto countStoresByOwnerId(Long ownerId);
 
 }

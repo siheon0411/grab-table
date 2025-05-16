@@ -10,19 +10,19 @@
 <div class="wrapper">
     <div class="container">
         <div class="sign-in-container">
-            <form id="registerForm">
+            <div class = "box">
                 <h1>Sign Up</h1>
-                <br/>
+            <form id="registerForm">
                 <!-- CSRF 토큰 필드 -->
                 <input type="hidden" id="_csrf" name="" value="">
-
-                <input type="email" id="email" name="email" placeholder="Email" required>
-                <input type="text" id="name" name="name" placeholder="Name" required>
-                <input type="password" id="password" name="password" placeholder="Password" required>
-                <input type="date" id="birthdate" name="birthdate" required>
+                <input type="email" class = "box_input" id="email" name="email" placeholder="Email" required>
+                <input type="text" class = "box_input" id="name" name="name" placeholder="Name" required>
+                <input type="password" class = "box_input" id="password" name="password" placeholder="Password" required>
+                <input type="date" class = "box_input" id="birthdate" name="birthdate" required>
                 <button class="form_btn" type="submit">Register</button>
                 <p id="result" style="color:red;"></p>
             </form>
+            </div>
         </div>
 
         <div class="overlay-container">
