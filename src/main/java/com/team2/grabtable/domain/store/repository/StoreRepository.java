@@ -12,7 +12,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     @Query("select s from Store s join fetch s.owner where s.owner.ownerId = :ownerId")
     List<Store> findByOwnerId(@Param("ownerId") Long ownerId);
 
-    @Query("select count(s) from Store s where s.owner.ownerId = :ownerId")
-    Long countByOwnerId(@Param("ownerId") Long ownerId);
+//    @Query("select count(s) from Store s where s.owner.ownerId = :ownerId")
+//    Long countByOwnerId(@Param("ownerId") Long ownerId);
 
 }

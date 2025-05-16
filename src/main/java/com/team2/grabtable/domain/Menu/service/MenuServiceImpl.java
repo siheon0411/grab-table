@@ -2,7 +2,6 @@ package com.team2.grabtable.domain.Menu.service;
 
 import com.team2.grabtable.config.OwnerDetails;
 import com.team2.grabtable.domain.Menu.dto.MenuDto;
-import com.team2.grabtable.domain.Menu.dto.MenuImageDto;
 import com.team2.grabtable.domain.Menu.dto.MenuRegisterDto;
 import com.team2.grabtable.domain.Menu.dto.MenuResultDto;
 import com.team2.grabtable.domain.Menu.entity.Menu;
@@ -105,12 +104,12 @@ public class MenuServiceImpl implements MenuService {
         return menuResultDto;
     }
 
-    @Override
-    public MenuImageDto getMenuImage(OwnerDetails ownerDetails, Long menuId) {
-        Menu menu = menuRepository.findById(menuId)
-                .orElseThrow(() -> new RuntimeException("menu not found"));
-        return new MenuImageDto(menu.getImage(), menu.getImageContentType());
-    }
+//    @Override
+//    public MenuImageDto getMenuImage(OwnerDetails ownerDetails, Long menuId) {
+//        Menu menu = menuRepository.findById(menuId)
+//                .orElseThrow(() -> new RuntimeException("menu not found"));
+//        return new MenuImageDto(menu.getImage(), menu.getImageContentType());
+//    }
 
     @Override
     public MenuResultDto insertMenu(OwnerDetails ownerDetails, Long storeId, MenuRegisterDto menuRegisterDto) throws IOException {

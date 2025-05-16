@@ -1,7 +1,6 @@
 package com.team2.grabtable.domain.Menu.controller;
 
 import com.team2.grabtable.config.OwnerDetails;
-import com.team2.grabtable.domain.Menu.dto.MenuImageDto;
 import com.team2.grabtable.domain.Menu.dto.MenuRegisterDto;
 import com.team2.grabtable.domain.Menu.dto.MenuResultDto;
 import com.team2.grabtable.domain.Menu.service.MenuService;
@@ -29,10 +28,10 @@ public class MenuController {
         return ResponseEntity.status(200).body(menuService.findByMenuId(ownerDetails, menuId));
     }
 
-    @GetMapping("/menus/{menuId}/image")
-    public ResponseEntity<MenuImageDto> getMenuImage(@AuthenticationPrincipal OwnerDetails ownerDetails, @PathVariable Long menuId) {
-        return ResponseEntity.ok(menuService.getMenuImage(ownerDetails, menuId));
-    }
+//    @GetMapping("/menus/{menuId}/image")
+//    public ResponseEntity<MenuImageDto> getMenuImage(@AuthenticationPrincipal OwnerDetails ownerDetails, @PathVariable Long menuId) {
+//        return ResponseEntity.ok(menuService.getMenuImage(ownerDetails, menuId));
+//    }
 
     @PostMapping("/stores/{storeId}/menus")
     public ResponseEntity<MenuResultDto> insertMenu(@AuthenticationPrincipal OwnerDetails ownerDetails, @PathVariable Long storeId, @ModelAttribute MenuRegisterDto menuRegisterDto) throws IOException {

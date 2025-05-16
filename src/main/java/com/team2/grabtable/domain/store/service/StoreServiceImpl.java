@@ -100,12 +100,12 @@ public class StoreServiceImpl implements StoreService {
         return storeResultDto;
     }
 
-    @Override
-    public StoreImageDto getStoreImage(OwnerDetails ownerDetails, Long storeId) {
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(() -> new EntityNotFoundException("Store not found"));
-        return new StoreImageDto(store.getImage(), store.getImageContentType());
-    }
+//    @Override
+//    public StoreImageDto getStoreImage(OwnerDetails ownerDetails, Long storeId) {
+//        Store store = storeRepository.findById(storeId)
+//                .orElseThrow(() -> new EntityNotFoundException("Store not found"));
+//        return new StoreImageDto(store.getImage(), store.getImageContentType());
+//    }
 
     @Override
     public StoreResultDto insertStore(OwnerDetails ownerDetails, StoreRegisterDto storeRegisterDto) throws IOException {
@@ -200,19 +200,19 @@ public class StoreServiceImpl implements StoreService {
         return storeResultDto;
     }
 
-    @Override
-    public StoreResultDto countStoresByOwnerId(Long ownerId) {
-        StoreResultDto storeResultDto = new StoreResultDto();
-
-        try {
-            Long count = storeRepository.countByOwnerId(ownerId);
-            storeResultDto.setCount(count);
-            storeResultDto.setResult("success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            storeResultDto.setResult("fail");
-        }
-
-        return storeResultDto;
-    }
+//    @Override
+//    public StoreResultDto countStoresByOwnerId(Long ownerId) {
+//        StoreResultDto storeResultDto = new StoreResultDto();
+//
+//        try {
+//            Long count = storeRepository.countByOwnerId(ownerId);
+//            storeResultDto.setCount(count);
+//            storeResultDto.setResult("success");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            storeResultDto.setResult("fail");
+//        }
+//
+//        return storeResultDto;
+//    }
 }
