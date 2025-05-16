@@ -30,11 +30,11 @@ public class StoreController {
         return ResponseEntity.status(200).body(storeService.getStoreDetail(ownerDetails, storeId));
     }
 
-    @GetMapping("/{storeId}/image")
-    public ResponseEntity<byte[]> getStoreImage(@AuthenticationPrincipal OwnerDetails ownerDetails, @PathVariable Long storeId) {
-        StoreImageDto img = storeService.getStoreImage(ownerDetails, storeId);
-        return ResponseEntity.status(200).contentType(MediaType.parseMediaType(img.getContentType())).body(img.getData());
-    }
+//    @GetMapping("/{storeId}/image")
+//    public ResponseEntity<byte[]> getStoreImage(@AuthenticationPrincipal OwnerDetails ownerDetails, @PathVariable Long storeId) {
+//        StoreImageDto img = storeService.getStoreImage(ownerDetails, storeId);
+//        return ResponseEntity.status(200).contentType(MediaType.parseMediaType(img.getContentType())).body(img.getData());
+//    }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<StoreResultDto> insertStore(@AuthenticationPrincipal OwnerDetails ownerDetails, @ModelAttribute StoreRegisterDto storeRegisterDto) throws IOException {
