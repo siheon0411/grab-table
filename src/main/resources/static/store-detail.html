@@ -92,7 +92,7 @@
             <h5 class="mt-3">리뷰 목록</h5>
             <table class="table table-hover">
                 <thead>
-                <tr><th>작성자(ID)</th><th>메뉴명</th><th>내용</th><th>이미지</th><th>작성일</th><th>수정일</th></tr>
+                <tr><th>작성자</th><th>메뉴명</th><th>내용</th><th>이미지</th><th>작성일</th><th>수정일</th></tr>
                 </thead>
                 <tbody id="reviewTableBody"></tbody>
             </table>
@@ -352,7 +352,12 @@
         e.preventDefault();
         const form = e.target;
         const formData = new FormData(form);
+
         const id = formData.get("menuId");
+        console.log("📦 FormData 내용 확인");
+        for (const [key, val] of formData.entries()) {
+            console.log(`${key}:`, val);
+        }
         if (!formData.get("imageFile")) formData.delete("imageFile");
         const url = id ? `/api/admin/menus/${id}` : `/api/admin/stores/${storeId}/menus`;
         const method = id ? "PUT" : "POST";

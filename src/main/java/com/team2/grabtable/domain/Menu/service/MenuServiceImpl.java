@@ -114,7 +114,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public MenuResultDto insertMenu(OwnerDetails ownerDetails, Long storeId, MenuRegisterDto menuRegisterDto) throws IOException {
         MenuResultDto menuResultDto = new MenuResultDto();
-
+        System.out.println("imageFile: " + menuRegisterDto.getImageFile()); // ← null 여부 확인
         try {
             Optional<Store> optionalStore = storeRepository.findById(storeId);
 
