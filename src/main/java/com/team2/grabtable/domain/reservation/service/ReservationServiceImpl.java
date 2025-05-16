@@ -58,6 +58,7 @@ public class ReservationServiceImpl implements ReservationService {
                             .visitDate(res.getVisitDate().toString())
                             .slotId(res.getReservationSlot().getSlotId())
                             .slotStartTime(res.getReservationSlot().getStartTime())
+                            .createdAt(res.getCreatedAt())
                             .status(res.getStatus())
                             .build()
                     )
